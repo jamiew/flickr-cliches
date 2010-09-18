@@ -42,8 +42,9 @@ photos.each do |photo|
 
     agent = Mechanize.new
     agent.user_agent_alias = "Mac Safari"
-    filename = photo.url.split('/')[-1]
-    agent.get(photo.url).save_as(File.dirname(__FILE__)+'/photos/'+filename)
+    filename = File.dirname(__FILE__)+'/photos/'+photo.url.split('/')[-1]
+    next if File.exists?(filename)
+    agent.get(photo.url).save_as(filename)
   end
 
 end
