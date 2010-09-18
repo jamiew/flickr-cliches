@@ -2,11 +2,11 @@
 
 require 'rubygems'
 require 'yaml'
+require 'fileutils'
 require 'flickr_fu'
 
 config_file = File.dirname(__FILE__)+'/config.yml'
 config = YAML.load(File.open(config_file))
-puts "config=#{config.inspect}"
 
 flickr = Flickr.new(config_file)
 if File.exists?(File.dirname(__FILE__)+'/'+flickr.token_cache)
@@ -21,17 +21,29 @@ else
 end
 
 opts = {:per_page => 10, :media => 'photo', :sort => 'interestingness-desc'}
-# opts[:place_id] = 'fh4BQ2yYA5lK_1zfsw' # semi-random
 box = config["bounding_box"]
-# bbox arg = min long, min lat, max long, max lat
 opts[:bbox] = "#{box[0][1]},#{box[0][0]},#{box[1][1]},#{box[1][0]}"
-puts opts[:bbox].inspect
 
 puts "Searching for interesting photos..."
 photos = flickr.photos.search(opts)
+
 photos.each do |photo|
   puts "Views: #{photo.views} \tLocation: #{photo.location.latitude},#{photo.location.longitude} \tURL: #{photo.photopage_url}"
-  `open '#{photo.photopage_url}'` if ENV['OPEN']
+
+  if ENV['OPEN']
+    `open '#{photo.photopage_url}'`
+  end
+
+  if ENV['DOWNLOAD']
+    require 'mechanize'
+    FileUtils.mkdir_p(File.dirname(__FILE__)+'/photos')
+
+    agent = Mechanize.new
+    agent.user_agent_alias = "Mac Safari"
+    filename = photo.url.split('/')[-1]
+    agent.get(photo.url).save_as(File.dirname(__FILE__)+'/photos/'+filename)
+  end
+
 end
 
 exit 0
