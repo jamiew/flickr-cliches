@@ -28,3 +28,8 @@ Note: These options must be passed as all-caps statements in order to be properl
 PER_PAGE=[INT]: Similar to RoR environment variable, entered as "PER_PAGE=100 ruby interesting_by_geo.rb". Passing in any whole number will set the number of images to pull per iteration.  
 DOWNLOAD=[1|0]: Setting download to 1 allows the program to download the images to your machine for viewing later. Omitting it is equivalent to setting download to 0.
 OPEN=[1|0]: Setting open to 1 allows the program to open the flickr image page in your browser after data collection. Omitting it is equivalent to setting open to 0.
+
+== Common Errors
+
+Not a valid bounding box (Flickr::Error)
+This is a common error internal to 
