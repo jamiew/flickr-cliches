@@ -20,7 +20,8 @@ else
   flickr.auth.cache_token
 end
 
-opts = {:per_page => 10, :media => 'photo', :sort => 'interestingness-desc'}
+per_page = ENV['PER_PAGE'] && ENV['PER_PAGE'].to_i || 10
+opts = {:per_page => per_page, :media => 'photo', :sort => 'interestingness-desc'}
 box = config["bounding_box"]
 opts[:bbox] = "#{box[0][1]},#{box[0][0]},#{box[1][1]},#{box[1][0]}"
 
