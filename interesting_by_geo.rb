@@ -22,15 +22,26 @@ end
 
 page = ENV['PAGE'] && ENV['PAGE'].to_i || 1
 per_page = ENV['PER_PAGE'] && ENV['PER_PAGE'].to_i || 10
-opts = {:page => page, :per_page => per_page, :media => 'photo', :sort => 'interestingness-desc'}
+sort = 'interestingness-desc'
 box = config["bounding_box"]
-opts[:bbox] = "#{box[0][1]},#{box[0][0]},#{box[1][1]},#{box[1][0]}"
+bbox = "#{box[0][1]},#{box[0][0]},#{box[1][1]},#{box[1][0]}"
+opts = {:page => page, :per_page => per_page, :media => 'photo', :sort => sort, :bbox => bbox}
 
 puts "Searching for interesting photos..."
 photos = flickr.photos.search(opts)
 
+data = []
 photos.each do |photo|
-  puts "Views: #{photo.views} \tLocation: #{photo.location.latitude},#{photo.location.longitude} \tURL: #{photo.photopage_url}"
+
+  location_info = photo.location && "#{photo.location && photo.location.latitude},#{photo.location && photo.location.longitude}] (#{photo.location.accuracy})" || 'nil'
+  puts "Views: #{photo.views}  Location: #{location_info} \tDate: #{photo.taken_at.to_s}  URL: #{photo.photopage_url}"
+
+  # Data we want to dump:
+  # - photo_pageurl, owner, owner_realname, taken_at, updated_at, latitude, longitude, views, tags
+  # Things we need to add via secondary API calls:
+  # - favorites, contexts (sets and pools)
+
+  data << "#{photo.photopage_url},#{photo.owner},#{photo.owner_realname},#{photo.taken_at},#{photo.updated_at},#{photo.location && photo.location.latitude},#{photo.location && photo.location.longitude},#{photo.views},#{photo.tags}"
 
   if ENV['OPEN']
     `open '#{photo.photopage_url}'`
@@ -48,5 +59,11 @@ photos.each do |photo|
   end
 
 end
+
+
+STDERR.puts "Dumping raw CSV data..."
+# TODO fill this in
+# output the 'data' array to a file
+STDERR.puts data.inspect
 
 exit 0
