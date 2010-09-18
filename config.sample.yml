@@ -2,7 +2,8 @@ key: "yourFlickrKey"
 secret: "yourSecretYo"
 token_cache: "token_cache.yml"
 
-# San Francisco bounding box
+# San Francisco
+# bottom-left + top-right
 bounding_box:
-- [37.396, -121.903]
-- [38.010, -122.684]
+- [37.675, -122.669]
+- [37.907, -122.213]
