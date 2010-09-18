@@ -1,0 +1,21 @@
+== Flickr Cliches
+
+A Web Ecology Joint
+*** required gems ***
+
+flickr_fu (>0.3.0)
+xml-magic (>0.1.1)
+rubygems
+
+Flickr cliches is a package that collects images from geographically bounded locations (as outlined in the config.yml) based on the images "interestingness". From here, the program analyzes basic metrics about these images and provides you with a way of viewing the images for your own qualitative analysis of the images. In Web Ecology's use, the package was used to research the metrics and values of interestingness for photographs in different locations around the world.
+
+== Setup
+
+1. Create your own config.yml file in the spirit of the config.sample.yml
+2. Go to Flickr, create an account if you do not already have one, then Request a key via this URL: http://www.flickr.com/services/apps/create/noncommercial/ (if you already have your key, you are cool to just move on)
+3. Once you have filled out the request API key, replace 'key: "yourFlickrKey"' and 'secret: "yourSecretYo"' With your key and secret.
+
+== Operation
+
+4. In terminal, cd to flickr-cliches/ then run 'ruby interesting_by_geo.rb'. The program will then open a new window in your browser authenticating the usage of this key for the program. Accept this and continue.
+5. Return to terminal, then press enter to kick off the data collection process.
