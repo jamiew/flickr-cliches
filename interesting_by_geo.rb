@@ -21,9 +21,15 @@ end
 page = ENV['PAGE'] && ENV['PAGE'].to_i || 1
 per_page = ENV['PER_PAGE'] && ENV['PER_PAGE'].to_i || 10
 sort = 'interestingness-desc'
-box = config["bounding_box"]
-bbox = "#{box[0][1]},#{box[0][0]},#{box[1][1]},#{box[1][0]}"
-opts = {:page => page, :per_page => per_page, :media => 'photo', :sort => sort, :bbox => bbox}
+if config["bounding_box"]
+  box = config["bounding_box"]
+  bbox = "#{box[0][1]},#{box[0][0]},#{box[1][1]},#{box[1][0]}"
+  opts = {:page => page, :per_page => per_page, :media => 'photo', :sort => sort, :bbox => bbox}
+else
+  box = config["tags"]
+  bbox = "#{box[0][1]},#{box[0][0]},#{box[1][1]},#{box[1][0]}"
+  opts = {:page => page, :per_page => per_page, :media => 'photo', :sort => sort, :bbox => bbox}
+end
 
 puts "Searching for interesting photos..."
 photos = flickr.photos.search(opts)
