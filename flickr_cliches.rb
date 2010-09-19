@@ -93,11 +93,10 @@ end
 
 def download_image(sub_dir,photo,photo_id)
   if ENV['DOWNLOAD']
-    agent = Mechanize.new
-    agent.user_agent_alias = "Mac Safari"
     filename = "#{DATA_DIR}/#{sub_dir}/#{photo_id}"
-    next if File.exists?(filename)
-    agent.get(photo.url).save_as(filename)
+    file = photo.url.scan(/\/\/.*\/(.*)/).to_s
+    `wget #{photo.url}`
+    `mv #{photo_id} #{filename}`
   end
 end
   
