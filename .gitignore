@@ -2,3 +2,4 @@
 config.yml
 token_cache.yml
 photos
+photos*
