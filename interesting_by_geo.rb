@@ -1,9 +1,7 @@
 #!/usr/bin/env ruby
 
-require 'rubygems'
-require 'yaml'
-require 'fileutils'
-require 'flickr_fu'
+['rubygems','yaml','fileutils','flickr_fu','faster_csv'].collect{|r| require r}
+load "utils.rb"
 
 config_file = File.dirname(__FILE__)+'/config.yml'
 config = YAML.load(File.open(config_file))
@@ -40,8 +38,7 @@ photos.each do |photo|
   # - photo_pageurl, owner, owner_realname, taken_at, updated_at, latitude, longitude, views, tags
   # Things we need to add via secondary API calls:
   # - favorites, contexts (sets and pools)
-
-  data << "#{photo.photopage_url},#{photo.owner},#{photo.owner_realname},#{photo.taken_at},#{photo.updated_at},#{photo.location && photo.location.latitude},#{photo.location && photo.location.longitude},#{photo.views},#{photo.tags}"
+  data << {"photopage_url" => photo.photopage_url, "owner" => photo.owner, "owner_realname" => photo.owner_realname, "taken_at" => photo.taken_at.strftime("%Y-%m-%d %H:%M:%S"), "updated_at" => photo.updated_at.strftime("%Y-%m-%d %H:%M:%S"), "lat" => photo.location.latitude, "lon" => photo.location.longitude, "views" => photo.views, "tags" => sanitize_tags(photo.tags)}
 
   if ENV['OPEN']
     `open '#{photo.photopage_url}'`
@@ -62,8 +59,14 @@ end
 
 
 STDERR.puts "Dumping raw CSV data..."
-# TODO fill this in
-# output the 'data' array to a file
+`mkdir datasets` if !`ls`.split("\n").include?("datasets")
+FasterCSV.open("datasets/data.csv", "w") do |csv|
+  headers = data.first.keys
+  csv << headers
+  data.each do |datum|
+    csv << headers.collect{|header|datum[header]}
+  end
+end
 STDERR.puts data.inspect
 
 exit 0
