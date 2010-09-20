@@ -1,0 +1,22 @@
+<h1>Listing flickr_configs</h1>
+
+<table>
+  <tr>
+    <th>Key</th>
+    <th>Secret</th>
+  </tr>
+
+<% @flickr_configs.each do |flickr_config| %>
+  <tr>
+    <td><%=h flickr_config.key %></td>
+    <td><%=h flickr_config.secret %></td>
+    <td><%= link_to 'Show', flickr_config %></td>
+    <td><%= link_to 'Edit', edit_flickr_config_path(flickr_config) %></td>
+    <td><%= link_to 'Destroy', flickr_config, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New flickr_config', new_flickr_config_path %>

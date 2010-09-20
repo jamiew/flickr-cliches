@@ -1,0 +1,13 @@
+<p>
+  <b>Key:</b>
+  <%=h @flickr_config.key %>
+</p>
+
+<p>
+  <b>Secret:</b>
+  <%=h @flickr_config.secret %>
+</p>
+
+
+<%= link_to 'Edit', edit_flickr_config_path(@flickr_config) %> |
+<%= link_to 'Back', flickr_configs_path %>

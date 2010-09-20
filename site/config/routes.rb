@@ -1,4 +1,11 @@
 ActionController::Routing::Routes.draw do |map|
+  map.root :controller => "tag_categories", :action => "index"
+  map.resources :tag_categories
+
+  map.resources :flickr_configs
+
+  map.resources :configs
+
   map.resources :photos
 
   map.resources :tags
