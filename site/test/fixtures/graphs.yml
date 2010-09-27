@@ -1,0 +1,7 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  graph_title: MyString
+
+two:
+  graph_title: MyString

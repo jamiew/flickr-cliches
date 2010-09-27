@@ -1,0 +1,15 @@
+<h1>New graph</h1>
+
+<% form_for(@graph) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :graph_title %><br />
+    <%= f.text_field :graph_title %>
+  </p>
+  <p>
+    <%= f.submit 'Create' %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', graphs_path %>
