@@ -1,8 +1,19 @@
 <p>
   <b>Name:</b>
   <%=h @tag_category.name %>
+  <h1>Seed Tags</h1>
+  <p>
+  <% for tag in @tag_category.tags.sort{|x,y| x.slug<=>y.slug} %>
+    <%= link_to tag.term, tag_path(tag) %><% if tag != @tag_category.tags.last%>, <% end %>
+  <% end %>
+  </p>
+  <h1>Data Set Results</h1>
+  <ul>
+    <li><%= link_to_remote("Tag Distribution",  :replace => 'dataDisplay', :url => render_google_graph_url("tag_distribution", @tag_category.id)) %></li>
+    <li><%= link_to_remote("Time Distribution",  :replace => 'dataDisplay', :url => render_google_graph_url("time_distribution", @tag_category.id)) %></li>
+    <li><%= link_to_remote("Geographic Placement",  :replace => 'dataDisplay', :url => render_google_graph_url("geographic_placement", @tag_category.id)) %></li>
+    <li><%= link_to_remote("Views Distribution",  :replace => 'dataDisplay', :url => render_google_graph_url("views_distribution", @tag_category.id)) %></li>
+  </ul>
+  <div id="dataDisplay">
+  </div>
 </p>
-
-
-<%= link_to 'Edit', edit_tag_category_path(@tag_category) %> |
-<%= link_to 'Back', tag_categories_path %>

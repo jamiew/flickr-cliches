@@ -9,11 +9,17 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100920041715) do
+ActiveRecord::Schema.define(:version => 20100921051402) do
 
   create_table "flickr_configs", :force => true do |t|
     t.string   "key"
     t.string   "secret"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "graphs", :force => true do |t|
+    t.string   "graph_title"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

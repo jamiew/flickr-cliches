@@ -1,5 +1,10 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :graphs
+
   map.root :controller => "tag_categories", :action => "index"
+  
+  map.render_google_graph '/graphs/:graph_type/:id', :controller => "graphs", :action => "render_google_graph"
+  map.google_graph '/graphs/:graph_type/:id.:format', :controller => "graphs", :action => "generate_google_graph"
   map.resources :tag_categories
 
   map.resources :flickr_configs

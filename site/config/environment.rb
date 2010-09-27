@@ -2,7 +2,7 @@
 
 # Specifies gem version of Rails to use when vendor/rails is not present
 RAILS_GEM_VERSION = '2.3.4' unless defined? RAILS_GEM_VERSION
-
+API_URL = "127.0.0.1:3000"
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
 

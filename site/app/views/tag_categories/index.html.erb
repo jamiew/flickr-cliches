@@ -7,10 +7,7 @@
 
 <% @tag_categories.each do |tag_category| %>
   <tr>
-    <td><%=h tag_category.name %></td>
-    <td><%= link_to 'Show', tag_category %></td>
-    <td><%= link_to 'Edit', edit_tag_category_path(tag_category) %></td>
-    <td><%= link_to 'Destroy', tag_category, :confirm => 'Are you sure?', :method => :delete %></td>
+    <td><%= link_to tag_category.name, tag_category_path(tag_category) %></td>
   </tr>
 <% end %>
 </table>

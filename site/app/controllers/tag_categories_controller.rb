@@ -1,6 +1,7 @@
 class TagCategoriesController < ApplicationController
   # GET /tag_categories
   # GET /tag_categories.xml
+  layout 'default'
   def index
     @tag_categories = TagCategory.all
 

@@ -65,11 +65,12 @@ class DataPull
     ts = []
     data_file = []
     photos.each do |photo|
-      ts << Thread.new{
+      # ts << Thread.new{
         photo_id = photo.url.split('/')[-1]
         location_info = photo.location && "#{photo.location && photo.location.latitude},#{photo.location && photo.location.longitude}] (#{photo.location.accuracy})" || 'nil'
         puts "Views: #{photo.views}  Location: #{location_info} \tDate: #{photo.taken_at.to_s}  URL: #{photo.photopage_url}"
-        data_file << Photo.new({"internal_category" => {"tag_category_id" => TagCategory.find_by_name(sub_dir).nil? ? (TagCategory.new(:name => sub_dir).save;TagCategory.find_by_name(sub_dir)).id : TagCategory.find_by_name(sub_dir).id, 
+        tag_category_id = TagCategory.find_by_name(sub_dir).nil? ? (TagCategory.new(:name => sub_dir).save;TagCategory.find_by_name(sub_dir)).id : TagCategory.find_by_name(sub_dir).id
+        data_file << Photo.new({"tag_category_id" => tag_category_id, 
           "flickr_id" => photo_id, 
           "photopage_url" => photo.photopage_url, 
           "owner" => photo.owner, 
@@ -82,12 +83,9 @@ class DataPull
           "tags" => sanitize_tags(photo.tags).collect{|t| Tag.find_by_slug(t.downcase.gsub(" ","_")).nil? ? (Tag.new(:slug => t.downcase.gsub(" ", "_"), :term => t).save;Tag.find_by_slug(t.downcase.gsub(" ","_"))) : Tag.find_by_slug(t.downcase.gsub(" ","_"))}      }).save
           self.open_image(photo.photopage_url)
           self.download_image(dir+"/"+sub_dir,photo,photo_id)
-          }      
+          # }      
     end
-    ts.collect{|t| t.join}
-    data_file.each do |df|
-      df.save
-    end
+    # ts.collect{|t| t.join}
   end
 
   def self.open_image(photopage_url)
@@ -131,5 +129,8 @@ class DataPull
     csv_dump(@data_files.collect{|f| f[0..f.length-2]}.flatten,output)
     puts "Done."
   end
-
+  def self.refresh_db
+    Tag.all.collect{|t| t.destroy if t.tag_category_id.nil?}
+    Photo.all.collect{|p| p.destroy}
+  end
 end
