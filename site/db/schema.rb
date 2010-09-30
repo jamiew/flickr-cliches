@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100921051402) do
+ActiveRecord::Schema.define(:version => 20100930145519) do
 
   create_table "flickr_configs", :force => true do |t|
     t.string   "key"
@@ -56,6 +56,7 @@ ActiveRecord::Schema.define(:version => 20100921051402) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "tag_category_id"
+    t.boolean  "human_coded"
   end
 
 end
