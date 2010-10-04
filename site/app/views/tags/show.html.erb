@@ -1,13 +1,16 @@
 <p>
-  <b>Slug:</b>
-  <%=h @tag.slug %>
+  <h1><%=h @tag.term %></h1>
+  <h2>Data Set Results</h2>
+  <ul>
+    <li><%= @tag.photos.length %> total image<% if @tag.photos.lenth != 1 %>s<% end %></li>
+  </ul>
+  <ul>
+    <li><%= link_to_remote("View Images", :replace => 'dataDisplay', :url => render_images_tag_url(@tag.id)) %></li>
+    <li><%= link_to_remote("Tag Distribution",  :replace => 'dataDisplay', :url => render_google_graph_tag_url("tag_distribution", @tag.id)) %></li>
+    <li><%= link_to_remote("Time Distribution",  :replace => 'dataDisplay', :url => render_google_graph_tag_url("time_distribution", @tag.id)) %></li>
+    <li><%= link_to_remote("Geographic Placement",  :replace => 'dataDisplay', :url => render_google_graph_tag_url("geographic_placement", @tag.id)) %></li>
+    <li><%= link_to_remote("Views Distribution",  :replace => 'dataDisplay', :url => render_google_graph_tag_url("views_distribution", @tag.id)) %></li>
+  </ul>
+  <div id="dataDisplay">
+  </div>
 </p>
-
-<p>
-  <b>Term:</b>
-  <%=h @tag.term %>
-</p>
-
-
-<%= link_to 'Edit', edit_tag_path(@tag) %> |
-<%= link_to 'Back', tags_path %>

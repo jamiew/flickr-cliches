@@ -32,7 +32,7 @@ class TagCategoriesController < ApplicationController
       format.xml  { render :xml => @tag_category }
     end
   end
-
+  
   # GET /tag_categories/1/edit
   def edit
     @tag_category = TagCategory.find(params[:id])

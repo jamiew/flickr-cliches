@@ -1,6 +1,8 @@
 <p>
-  <b>Name:</b>
-  <%=h @tag_category.name %>
+  <h1><%=h @tag_category.name %></h1>
+  <ul>
+    <li><%= @tag.photos.length %> total image<% if @tag.photos.lenth != 1 %>s<% end %></li>
+  </ul>
   <h1>Seed Tags</h1>
   <p>
   <% for tag in @tag_category.tags.sort{|x,y| x.slug<=>y.slug} %>
@@ -9,6 +11,7 @@
   </p>
   <h1>Data Set Results</h1>
   <ul>
+    <li><%= link_to_remote("View Images", :replace => 'dataDisplay', :url => render_images_url(@tag_category.id)) %></li>
     <li><%= link_to_remote("Tag Distribution",  :replace => 'dataDisplay', :url => render_google_graph_url("tag_distribution", @tag_category.id)) %></li>
     <li><%= link_to_remote("Time Distribution",  :replace => 'dataDisplay', :url => render_google_graph_url("time_distribution", @tag_category.id)) %></li>
     <li><%= link_to_remote("Geographic Placement",  :replace => 'dataDisplay', :url => render_google_graph_url("geographic_placement", @tag_category.id)) %></li>

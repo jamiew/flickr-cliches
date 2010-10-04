@@ -1,0 +1,8 @@
+<div id="photo_<%= photo.id %>_tag">
+  <%- remote_form_for(Tag.new, :url => "/tags", :method => "post", 
+             :after => "submitTag(self);$('input').disable()") do |f| %>
+  <%= f.text_field :term, :class => "tag_body" %><br />
+  <%= f.hidden_field :photo_id, :value => photo.id %>
+  <%= f.submit "Submit", :class => "tag_submit" %>
+  <%- end -%>
+</div>

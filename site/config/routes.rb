@@ -5,6 +5,11 @@ ActionController::Routing::Routes.draw do |map|
   
   map.render_google_graph '/graphs/:graph_type/:id', :controller => "graphs", :action => "render_google_graph"
   map.google_graph '/graphs/:graph_type/:id.:format', :controller => "graphs", :action => "generate_google_graph"
+  map.render_images '/photos/groups/:id', :controller => "photos", :action => "index"
+  map.render_google_graph_tag '/t/graphs/:graph_type/:id', :controller => "tags", :action => "render_google_graph"
+  map.google_graph_tag '/t/graphs/:graph_type/:id.:format', :controller => "tags", :action => "generate_google_graph"
+  map.render_images_tag '/t/photos/groups/:id', :controller => "photos", :action => "index_tag"
+  map.new_human_coding_tag '/tags/new/human_coding/:photo_id', :controller => "tags", :action => "new_tag_form"
   map.resources :tag_categories
 
   map.resources :flickr_configs

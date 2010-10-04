@@ -19,7 +19,7 @@ class DataPull
       @flickr.auth.cache_token
     end
     page = ENV['PAGE'] && ENV['PAGE'].to_i || 1
-    per_page = ENV['PER_PAGE'] && ENV['PER_PAGE'].to_i || 10
+    per_page = ENV['PER_PAGE'] && ENV['PER_PAGE'].to_i || 10000
     sort = 'interestingness-desc'
     @data_files = []
     self.run_tags(page,per_page,sort)
@@ -64,28 +64,36 @@ class DataPull
     photos = @flickr.photos.search(opts)
     ts = []
     data_file = []
+    debugger
     photos.each do |photo|
-      # ts << Thread.new{
+      ts << Thread.new{
         photo_id = photo.url.split('/')[-1]
-        location_info = photo.location && "#{photo.location && photo.location.latitude},#{photo.location && photo.location.longitude}] (#{photo.location.accuracy})" || 'nil'
-        puts "Views: #{photo.views}  Location: #{location_info} \tDate: #{photo.taken_at.to_s}  URL: #{photo.photopage_url}"
-        tag_category_id = TagCategory.find_by_name(sub_dir).nil? ? (TagCategory.new(:name => sub_dir).save;TagCategory.find_by_name(sub_dir)).id : TagCategory.find_by_name(sub_dir).id
-        data_file << Photo.new({"tag_category_id" => tag_category_id, 
-          "flickr_id" => photo_id, 
-          "photopage_url" => photo.photopage_url, 
-          "owner" => photo.owner, 
-          "owner_realname" => photo.owner_realname, 
-          "taken_at" => photo.taken_at.strftime("%Y-%m-%d %H:%M:%S"), 
-          "updated_at" => photo.updated_at.strftime("%Y-%m-%d %H:%M:%S"), 
-          "lat" => photo.location && photo.location.latitude, 
-          "lon" => photo.location && photo.location.longitude, 
-          "views" => photo.views, 
-          "tags" => sanitize_tags(photo.tags).collect{|t| Tag.find_by_slug(t.downcase.gsub(" ","_")).nil? ? (Tag.new(:slug => t.downcase.gsub(" ", "_"), :term => t).save;Tag.find_by_slug(t.downcase.gsub(" ","_"))) : Tag.find_by_slug(t.downcase.gsub(" ","_"))}      }).save
-          self.open_image(photo.photopage_url)
-          self.download_image(dir+"/"+sub_dir,photo,photo_id)
-          # }      
+        if Photo.find_by_flickr_id(photo_id) != Photo
+          begin
+            location_info = photo.location && "#{photo.location && photo.location.latitude},#{photo.location && photo.location.longitude}] (#{photo.location.accuracy})" || 'nil'
+            puts "Views: #{photo.views}  Location: #{location_info} \tDate: #{photo.taken_at.to_s}  URL: #{photo.photopage_url}"
+            tag_category_id = TagCategory.find_by_name(sub_dir).nil? ? (TagCategory.new(:name => sub_dir).save;TagCategory.find_by_name(sub_dir)).id : TagCategory.find_by_name(sub_dir).id
+            data_file << Photo.new({"tag_category_id" => tag_category_id, 
+            "flickr_id" => photo_id, 
+            "photopage_url" => photo.photopage_url, 
+            "owner" => photo.owner, 
+            "owner_realname" => photo.owner_realname, 
+            "taken_at" => photo.taken_at.strftime("%Y-%m-%d %H:%M:%S"), 
+            "updated_at" => photo.updated_at.strftime("%Y-%m-%d %H:%M:%S"), 
+            "lat" => photo.location && photo.location.latitude, 
+            "lon" => photo.location && photo.location.longitude, 
+            "views" => photo.views, 
+            "server" => photo.server,
+            "tags" => sanitize_tags(photo.tags).collect{|t| Tag.find_by_slug(t.downcase.gsub(" ","_")).nil? ? (Tag.new(:slug => t.downcase.gsub(" ", "_"), :term => t).save;Tag.find_by_slug(t.downcase.gsub(" ","_"))) : Tag.find_by_slug(t.downcase.gsub(" ","_"))}      }).save
+            self.open_image(photo.photopage_url)
+            self.download_image(dir+"/"+sub_dir,photo,photo_id)
+          rescue 
+            retry
+          end
+        end
+      }      
     end
-    # ts.collect{|t| t.join}
+    ts.collect{|t| t.join}
   end
 
   def self.open_image(photopage_url)
